@@ -1,0 +1,107 @@
+Name: NetworkManager
+Summary: Network connection manager and user applications
+Version: 0.9.10.0
+Release: 1
+Group: System/Base
+License: GPLv2+
+URL: http://www.gnome.org/projects/NetworkManager/
+Sources:
+    - "%{name}-%{version}.tar.xz"
+    - NetworkManager.conf
+    - NetworkManager-wakeup.sh
+SetupOptions: -q -n %{name}-%{version}/upstream
+Description: |
+    NetworkManager is a system network service that manages your network devices
+    and connections, attempting to keep active network connectivity when available.
+    It manages ethernet, WiFi, mobile broadband (WWAN), and PPPoE devices, and
+    provides VPN integration with a variety of different VPN services.
+
+Requires:
+    - dbus
+    - dhclient
+    - iproute
+    - wpa_supplicant
+    - ppp
+    - udev
+    - mobile-broadband-provider-info
+RequiresPreUn:
+    - /bin/systemctl
+RequiresPost:
+    - /bin/systemctl
+RequiresPostUn:
+    - /bin/systemctl
+PkgBR:
+    - glib2
+    - dbus-glib
+    - wireless-tools-devel
+    - gettext
+    - pkgconfig
+    - wpa_supplicant
+    - perl(XML::Parser)
+    - automake
+    - autoconf
+    - intltool
+    - libtool
+    - ppp-devel
+    - desktop-file-utils
+    - readline-devel
+    - libndp-devel
+PkgConfigBR:
+    - dbus-1
+    - dbus-glib-1
+    - glib-2.0
+    - nss
+    - polkit-agent-1
+    - udev
+    - uuid
+    - gudev-1.0
+    - libiptc
+    - iso-codes
+    - libnl-3.0
+    - systemd
+Configure: configure
+ConfigOptions:
+    - --with-distro=redhat
+    - --with-dhclient=yes
+    - --with-dhcpcd=no
+    - --with-crypto=nss
+    - --enable-more-warnings=yes
+    - --enable-wimax=no
+    - --enable-polkit=yes
+    - --with-system-ca-path=/etc/pki/tls/certs
+    - --with-tests=yes
+    - --enable-ifcfg-rh
+Builder: make
+LocaleName: "%{name}"
+SubPackages:
+    - Name: glib
+      Summary: Libraries for adding NetworkManager support to applications that use glib
+      Group: Development/Libraries
+      Description: |
+          This package contains the libraries that make it easier to use some NetworkManager
+          functionality from applications that use glib.
+      Requires:
+          - dbus
+
+    - Name: glib-devel
+      Summary: Header files for adding NetworkManager support to applications that use glib
+      Group: Development/Libraries
+      Description: |
+          This package contains the header and pkg-config files for development applications using
+          NetworkManager functionality from applications that use glib.
+      Requires:
+          - "%{name}-devel = %{version}-%{release}"
+          - "%{name}-glib = %{version}-%{release}"
+          - glib2-devel
+          - pkgconfig
+          - dbus-glib-devel
+
+    - Name: devel
+      Summary: Libraries and headers for adding NetworkManager support to applications
+      Group: Development/Libraries
+      Description: |
+          This package contains various headers accessing some NetworkManager functionality
+          from applications.
+      Requires:
+          - dbus-devel
+          - pkgconfig
