@@ -16,6 +16,10 @@ Description: |
     It manages ethernet, WiFi, mobile broadband (WWAN), and PPPoE devices, and
     provides VPN integration with a variety of different VPN services.
 
+Macros:
+    - systemd_dir;/lib/systemd/system
+    - udev_dir;/lib/udev
+
 Requires:
     - dbus
     - dhclient
@@ -72,6 +76,14 @@ ConfigOptions:
     - --with-system-ca-path=%{_sysconfdir}/pki/tls/certs
     - --with-tests=yes
     - --enable-ifcfg-rh
+    - --enable-modify-system=yes
+    - --enable-concheck
+    - --with-session-tracking=systemd
+    - --with-suspend-resume=systemd
+    - --with-systemdsystemunitdir=%{systemd_dir}
+    - --with-udev-dir=%{udev_dir}
+    - --with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version}
+    - --with-dist-version=%{version}-%{release}
 Builder: make
 LocaleName: "%{name}"
 SubPackages:

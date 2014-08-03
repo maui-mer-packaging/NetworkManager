@@ -7,6 +7,8 @@ Name:       NetworkManager
 
 # >> macros
 # << macros
+%define udev_dir /lib/udev
+%define systemd_dir /lib/systemd/system
 
 Summary:    Network connection manager and user applications
 Version:    0.9.10.0
@@ -131,7 +133,15 @@ export CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"
     --enable-ppp=yes \
     --with-system-ca-path=%{_sysconfdir}/pki/tls/certs \
     --with-tests=yes \
-    --enable-ifcfg-rh
+    --enable-ifcfg-rh \
+    --enable-modify-system=yes \
+    --enable-concheck \
+    --with-session-tracking=systemd \
+    --with-suspend-resume=systemd \
+    --with-systemdsystemunitdir=%{systemd_dir} \
+    --with-udev-dir=%{udev_dir} \
+    --with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
+    --with-dist-version=%{version}-%{release}
 
 make %{?_smp_mflags}
 
