@@ -16,10 +16,6 @@ Description: |
     It manages ethernet, WiFi, mobile broadband (WWAN), and PPPoE devices, and
     provides VPN integration with a variety of different VPN services.
 
-Macros:
-    - systemd_dir;/lib/systemd/system
-    - udev_dir;/lib/udev
-
 Requires:
     - dbus
     - dhclient
@@ -80,12 +76,47 @@ ConfigOptions:
     - --enable-concheck
     - --with-session-tracking=systemd
     - --with-suspend-resume=systemd
-    - --with-systemdsystemunitdir=%{systemd_dir}
-    - --with-udev-dir=%{udev_dir}
+    - --with-systemdsystemunitdir=/%{_lib}/systemd/system
+    - --with-udev-dir=/lib/udev
     - --with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version}
     - --with-dist-version=%{version}-%{release}
 Builder: make
 LocaleName: "%{name}"
+
+Files:
+    - "%defattr(-,root,root,0755)"
+    - "%doc COPYING NEWS AUTHORS README CONTRIBUTING TODO"
+    - "%config %{_sysconfdir}/dbus-1/system.d/*"
+    - "%{_sbindir}/%{name}"
+    - "%{_bindir}/nmcli"
+    - "%{_datadir}/bash-completion/completions/nmcli"
+    - "%dir %{_sysconfdir}/%{name}/"
+    - "%dir %{_sysconfdir}/%{name}/dispatcher.d"
+    - "%config(noreplace) %{_sysconfdir}/%{name}/NetworkManager.conf"
+    - "%{_bindir}/nm-online"
+    - "%{_libexecdir}/*"
+    - "%dir %{_libdir}/NetworkManager"
+    - "%{_libdir}/NetworkManager/*.so*"
+    - "#%{_mandir}/man1/*"
+    - "#%{_mandir}/man5/*"
+    - "#%{_mandir}/man8/*"
+    - "%dir %{_localstatedir}/run/NetworkManager"
+    - "%dir %{_localstatedir}/lib/NetworkManager"
+    - "#%{_prefix}/libexec/nm-crash-logger"
+    - "#%dir %{_datadir}/NetworkManager"
+    - "#%{_datadir}/NetworkManager/gdb-cmd"
+    - "%dir %{_sysconfdir}/NetworkManager/system-connections"
+    - "%{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service"
+    - "%{_libdir}/pppd/*/nm-pppd-plugin.so"
+    - "%{_datadir}/polkit-1/actions/*.policy"
+    - "/lib/udev/rules.d/*.rules"
+    - "# systemd stuff"
+    - "%{_libdir}/systemd/*"
+    - "/%{_lib}/systemd/system-sleep/*"
+    - "/%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service"
+    - "/%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service"
+    - "%{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service"
+
 SubPackages:
     - Name: glib
       Summary: Libraries for adding NetworkManager support to applications that use glib
@@ -95,6 +126,11 @@ SubPackages:
           functionality from applications that use glib.
       Requires:
           - dbus
+      Files:
+          - "%defattr(-,root,root,0755)"
+          - "%{_libdir}/libnm-glib.so.*"
+          - "%{_libdir}/libnm-glib-vpn.so.*"
+          - "%{_libdir}/libnm-util.so.*"
 
     - Name: glib-devel
       Summary: Header files for adding NetworkManager support to applications that use glib
@@ -108,6 +144,20 @@ SubPackages:
           - glib2-devel
           - pkgconfig
           - dbus-glib-devel
+      Files:
+          - "%defattr(-,root,root,0755)"
+          - "%dir %{_includedir}/libnm-glib"
+          - "%{_includedir}/libnm-glib/*.h"
+          - "%{_includedir}/%{name}/nm-setting*.h"
+          - "%{_includedir}/%{name}/nm-connection.h"
+          - "%{_includedir}/%{name}/nm-utils.h"
+          - "%{_includedir}/%{name}/nm-utils-enum-types.h"
+          - "%{_libdir}/pkgconfig/libnm-glib.pc"
+          - "%{_libdir}/pkgconfig/libnm-glib-vpn.pc"
+          - "%{_libdir}/pkgconfig/libnm-util.pc"
+          - "%{_libdir}/libnm-glib.so"
+          - "%{_libdir}/libnm-glib-vpn.so"
+          - "%{_libdir}/libnm-util.so"
 
     - Name: devel
       Summary: Libraries and headers for adding NetworkManager support to applications
@@ -118,3 +168,10 @@ SubPackages:
       Requires:
           - dbus-devel
           - pkgconfig
+      Files:
+          - "%defattr(-,root,root,0755)"
+          - "%dir %{_includedir}/%{name}"
+          - "%{_includedir}/%{name}/%{name}.h"
+          - "%{_includedir}/%{name}/NetworkManagerVPN.h"
+          - "%{_includedir}/%{name}/nm-version.h"
+          - "%{_libdir}/pkgconfig/%{name}.pc"

@@ -7,8 +7,6 @@ Name:       NetworkManager
 
 # >> macros
 # << macros
-%define udev_dir /lib/udev
-%define systemd_dir /lib/systemd/system
 
 Summary:    Network connection manager and user applications
 Version:    0.9.10.0
@@ -138,8 +136,8 @@ export CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"
     --enable-concheck \
     --with-session-tracking=systemd \
     --with-suspend-resume=systemd \
-    --with-systemdsystemunitdir=%{systemd_dir} \
-    --with-udev-dir=%{udev_dir} \
+    --with-systemdsystemunitdir=/%{_lib}/systemd/system \
+    --with-udev-dir=/lib/udev \
     --with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
     --with-dist-version=%{version}-%{release}
 
@@ -192,7 +190,6 @@ systemctl daemon-reload
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-# >> files
 %defattr(-,root,root,0755)
 %doc COPYING NEWS AUTHORS README CONTRIBUTING TODO
 %config %{_sysconfdir}/dbus-1/system.d/*
@@ -225,20 +222,20 @@ systemctl daemon-reload
 /%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service
 /%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
+# >> files
 # << files
 
 %files glib
 %defattr(-,root,root,-)
-# >> files glib
 %defattr(-,root,root,0755)
 %{_libdir}/libnm-glib.so.*
 %{_libdir}/libnm-glib-vpn.so.*
 %{_libdir}/libnm-util.so.*
+# >> files glib
 # << files glib
 
 %files glib-devel
 %defattr(-,root,root,-)
-# >> files glib-devel
 %defattr(-,root,root,0755)
 %dir %{_includedir}/libnm-glib
 %{_includedir}/libnm-glib/*.h
@@ -252,15 +249,16 @@ systemctl daemon-reload
 %{_libdir}/libnm-glib.so
 %{_libdir}/libnm-glib-vpn.so
 %{_libdir}/libnm-util.so
+# >> files glib-devel
 # << files glib-devel
 
 %files devel
 %defattr(-,root,root,-)
-# >> files devel
 %defattr(-,root,root,0755)
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/%{name}.h
 %{_includedir}/%{name}/NetworkManagerVPN.h
 %{_includedir}/%{name}/nm-version.h
 %{_libdir}/pkgconfig/%{name}.pc
+# >> files devel
 # << files devel
