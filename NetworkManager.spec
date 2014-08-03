@@ -7,6 +7,7 @@ Name:       NetworkManager
 
 # >> macros
 # << macros
+%define ppp_version 2.4.5
 
 Summary:    Network connection manager and user applications
 Version:    0.9.10.0
