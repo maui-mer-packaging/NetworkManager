@@ -109,7 +109,7 @@ from applications.
 
 
 %prep
-%setup -q -n %{name}-%{version}/upstream
+%setup -q -n src
 
 # >> setup
 # << setup
