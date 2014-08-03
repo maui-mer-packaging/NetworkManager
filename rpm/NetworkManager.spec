@@ -32,6 +32,7 @@ Requires(post): /bin/systemctl
 Requires(post): systemd
 Requires(postun): /bin/systemctl
 Requires(postun): systemd
+BuildRequires:  pkgconfig(gtk-doc)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(dbus-glib-1)
 BuildRequires:  pkgconfig(glib-2.0)
