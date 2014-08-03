@@ -68,6 +68,7 @@ ConfigOptions:
     - --enable-more-warnings=yes
     - --enable-wimax=no
     - --enable-polkit=yes
+    - --enable-ppp=yes
     - --with-system-ca-path=%{_sysconfdir}/pki/tls/certs
     - --with-tests=yes
     - --enable-ifcfg-rh

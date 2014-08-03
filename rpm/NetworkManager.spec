@@ -128,6 +128,7 @@ export CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"
     --enable-more-warnings=yes \
     --enable-wimax=no \
     --enable-polkit=yes \
+    --enable-ppp=yes \
     --with-system-ca-path=%{_sysconfdir}/pki/tls/certs \
     --with-tests=yes \
     --enable-ifcfg-rh
