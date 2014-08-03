@@ -118,7 +118,11 @@ Files:
     - "# systemd stuff"
     - "/%{_lib}/systemd/system-sleep/*"
     - "/%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service"
+    - "/%{_lib}/systemd/system/NetworkManager-dispatcher.service"
+    - "/%{_lib}/systemd/system/NetworkManager-wait-online.service"
+    - "/%{_lib}/systemd/system/NetworkManager.service"
     - "/%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service"
+    - "/%{_lib}/systemd/system/network-online.target.wants/NetworkManager-wait-online.service"
     - "%{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service"
 
 SubPackages:

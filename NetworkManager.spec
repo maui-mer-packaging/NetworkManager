@@ -178,11 +178,17 @@ rm -rvf %{buildroot}/usr/share/man
 %preun
 if [ "$1" -eq 0 ]; then
 systemctl stop dbus-org.freedesktop.NetworkManager.service
+systemctl stop NetworkManager-dispatcher.service
+systemctl stop NetworkManager-wait-online.service
+systemctl stop NetworkManager.service
 fi
 
 %post
 systemctl daemon-reload
 systemctl reload-or-try-restart dbus-org.freedesktop.NetworkManager.service
+systemctl reload-or-try-restart NetworkManager-dispatcher.service
+systemctl reload-or-try-restart NetworkManager-wait-online.service
+systemctl reload-or-try-restart NetworkManager.service
 
 %postun
 systemctl daemon-reload
@@ -222,7 +228,11 @@ systemctl daemon-reload
 # systemd stuff
 /%{_lib}/systemd/system-sleep/*
 /%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service
+/%{_lib}/systemd/system/NetworkManager-dispatcher.service
+/%{_lib}/systemd/system/NetworkManager-wait-online.service
+/%{_lib}/systemd/system/NetworkManager.service
 /%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service
+/%{_lib}/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
 # >> files
 # << files
