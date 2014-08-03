@@ -116,7 +116,6 @@ Files:
     - "%{_datadir}/polkit-1/actions/*.policy"
     - "/lib/udev/rules.d/*.rules"
     - "# systemd stuff"
-    - "%{_libdir}/systemd/*"
     - "/%{_lib}/systemd/system-sleep/*"
     - "/%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service"
     - "/%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service"
