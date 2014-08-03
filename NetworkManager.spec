@@ -45,6 +45,7 @@ BuildRequires:  pkgconfig(libiptc)
 BuildRequires:  pkgconfig(iso-codes)
 BuildRequires:  pkgconfig(libnl-3.0)
 BuildRequires:  pkgconfig(systemd)
+BuildRequires:  pkgconfig(libsoup-2.4)
 BuildRequires:  glib2
 BuildRequires:  dbus-glib
 BuildRequires:  wireless-tools-devel

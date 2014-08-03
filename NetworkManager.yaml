@@ -60,6 +60,7 @@ PkgConfigBR:
     - iso-codes
     - libnl-3.0
     - systemd
+    - libsoup-2.4
 Configure: configure
 ConfigOptions:
     - --with-distro=redhat
