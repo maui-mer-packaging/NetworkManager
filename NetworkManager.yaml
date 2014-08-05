@@ -1,7 +1,7 @@
 Name: NetworkManager
 Summary: Network connection manager and user applications
 Version: 0.9.10.0
-Release: 1
+Release: 2
 Group: System/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -27,12 +27,6 @@ Requires:
     - ppp
     - udev
     - mobile-broadband-provider-info
-RequiresPreUn:
-    - /bin/systemctl
-RequiresPost:
-    - /bin/systemctl
-RequiresPostUn:
-    - /bin/systemctl
 PkgBR:
     - glib2
     - dbus-glib
@@ -112,18 +106,18 @@ Files:
     - "#%{_datadir}/NetworkManager/gdb-cmd"
     - "%dir %{_sysconfdir}/NetworkManager/system-connections"
     - "%{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service"
+    - "%{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service"
     - "%{_libdir}/pppd/*/nm-pppd-plugin.so"
     - "%{_datadir}/polkit-1/actions/*.policy"
-    - "/lib/udev/rules.d/*.rules"
+    - "%{_prefix}/lib/udev/rules.d/*.rules"
     - "# systemd stuff"
-    - "/%{_lib}/systemd/system-sleep/*"
-    - "/%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service"
-    - "/%{_lib}/systemd/system/NetworkManager-dispatcher.service"
-    - "/%{_lib}/systemd/system/NetworkManager-wait-online.service"
-    - "/%{_lib}/systemd/system/NetworkManager.service"
-    - "/%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service"
-    - "/%{_lib}/systemd/system/network-online.target.wants/NetworkManager-wait-online.service"
-    - "%{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service"
+    - "%{_prefix}/%{_lib}/systemd/system-sleep/*"
+    - "%{_unitdir}/dbus-org.freedesktop.NetworkManager.service"
+    - "%{_unitdir}/NetworkManager-dispatcher.service"
+    - "%{_unitdir}/NetworkManager-wait-online.service"
+    - "%{_unitdir}/NetworkManager.service"
+    - "%{_unitdir}/multi-user.target.wants/NetworkManager.service"
+    - "%{_unitdir}/network-online.target.wants/NetworkManager-wait-online.service"
 
 SubPackages:
     - Name: glib

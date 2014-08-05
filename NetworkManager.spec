@@ -11,7 +11,7 @@ Name:       NetworkManager
 
 Summary:    Network connection manager and user applications
 Version:    0.9.10.0
-Release:    1
+Release:    2
 Group:      System/Base
 License:    GPLv2+
 URL:        http://www.gnome.org/projects/NetworkManager/
@@ -26,13 +26,6 @@ Requires:   wpa_supplicant
 Requires:   ppp
 Requires:   udev
 Requires:   mobile-broadband-provider-info
-Requires:   systemd
-Requires(preun): /bin/systemctl
-Requires(preun): systemd
-Requires(post): /bin/systemctl
-Requires(post): systemd
-Requires(postun): /bin/systemctl
-Requires(postun): systemd
 BuildRequires:  pkgconfig(gtk-doc)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(dbus-glib-1)
@@ -139,8 +132,8 @@ export CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"
     --enable-concheck \
     --with-session-tracking=systemd \
     --with-suspend-resume=systemd \
-    --with-systemdsystemunitdir=/%{_lib}/systemd/system \
-    --with-udev-dir=/lib/udev \
+    --with-systemdsystemunitdir=%{_unitdir} \
+    --with-udev-dir=%{_prefix}/lib/udev \
     --with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
     --with-dist-version=%{version}-%{release}
 
@@ -159,13 +152,13 @@ rm -rf %{buildroot}
 # >> install post
 %{__cp} %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/
 
-mkdir -p %{buildroot}/lib/systemd/system-sleep
-chmod 0755 %{buildroot}/lib/systemd/system-sleep
-cp %{SOURCE2} %{buildroot}/lib/systemd/system-sleep/NetworkManager-wakeup.sh
-chmod 0755 %{buildroot}/lib/systemd/system-sleep/NetworkManager-wakeup.sh
-mkdir -p %{buildroot}/%{_lib}/systemd/system/multi-user.target.wants
-ln -s ./NetworkManager.service %{buildroot}/%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service
-ln -s ../NetworkManager.service %{buildroot}/%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service
+mkdir -p %{buildroot}%{_prefix}/lib/systemd/system-sleep
+chmod 0755 %{buildroot}%{_prefix}/lib/systemd/system-sleep
+cp %{SOURCE2} %{buildroot}%{_prefix}/lib/systemd/system-sleep/NetworkManager-wakeup.sh
+chmod 0755 %{buildroot}%{_prefix}/lib/systemd/system-sleep/NetworkManager-wakeup.sh
+mkdir -p %{buildroot}%{_unitdir}/multi-user.target.wants
+ln -s ./NetworkManager.service %{buildroot}%{_unitdir}/dbus-org.freedesktop.NetworkManager.service
+ln -s ../NetworkManager.service %{buildroot}%{_unitdir}/multi-user.target.wants/NetworkManager.service
 
 # Ditch documentation nm decides to build for no good reason :@
 rm -rvf %{buildroot}/usr/share/doc
@@ -174,24 +167,6 @@ rm -rvf %{buildroot}/usr/share/man
 # << install post
 
 %find_lang %{name}
-
-%preun
-if [ "$1" -eq 0 ]; then
-systemctl stop dbus-org.freedesktop.NetworkManager.service
-systemctl stop NetworkManager-dispatcher.service
-systemctl stop NetworkManager-wait-online.service
-systemctl stop NetworkManager.service
-fi
-
-%post
-systemctl daemon-reload
-systemctl reload-or-try-restart dbus-org.freedesktop.NetworkManager.service
-systemctl reload-or-try-restart NetworkManager-dispatcher.service
-systemctl reload-or-try-restart NetworkManager-wait-online.service
-systemctl reload-or-try-restart NetworkManager.service
-
-%postun
-systemctl daemon-reload
 
 %post glib -p /sbin/ldconfig
 
@@ -222,18 +197,18 @@ systemctl daemon-reload
 #%{_datadir}/NetworkManager/gdb-cmd
 %dir %{_sysconfdir}/NetworkManager/system-connections
 %{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service
+%{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
 %{_libdir}/pppd/*/nm-pppd-plugin.so
 %{_datadir}/polkit-1/actions/*.policy
-/lib/udev/rules.d/*.rules
+%{_prefix}/lib/udev/rules.d/*.rules
 # systemd stuff
-/%{_lib}/systemd/system-sleep/*
-/%{_lib}/systemd/system/dbus-org.freedesktop.NetworkManager.service
-/%{_lib}/systemd/system/NetworkManager-dispatcher.service
-/%{_lib}/systemd/system/NetworkManager-wait-online.service
-/%{_lib}/systemd/system/NetworkManager.service
-/%{_lib}/systemd/system/multi-user.target.wants/NetworkManager.service
-/%{_lib}/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
-%{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
+%{_prefix}/%{_lib}/systemd/system-sleep/*
+%{_unitdir}/dbus-org.freedesktop.NetworkManager.service
+%{_unitdir}/NetworkManager-dispatcher.service
+%{_unitdir}/NetworkManager-wait-online.service
+%{_unitdir}/NetworkManager.service
+%{_unitdir}/multi-user.target.wants/NetworkManager.service
+%{_unitdir}/network-online.target.wants/NetworkManager-wait-online.service
 # >> files
 # << files
 
