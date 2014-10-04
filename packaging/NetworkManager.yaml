@@ -9,7 +9,7 @@ Sources:
     - "%{name}-%{version}.tar.xz"
     - NetworkManager.conf
     - NetworkManager-wakeup.sh
-SetupOptions: -q -n src
+SetupOptions: -q -n %{name}-%{version}
 Description: |
     NetworkManager is a system network service that manages your network devices
     and connections, attempting to keep active network connectivity when available.

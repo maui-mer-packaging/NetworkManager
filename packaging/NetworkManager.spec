@@ -104,7 +104,7 @@ from applications.
 
 
 %prep
-%setup -q -n src
+%setup -q -n %{name}-%{version}
 
 # >> setup
 # << setup
