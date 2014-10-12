@@ -55,7 +55,7 @@ PkgConfigBR:
     - gudev-1.0
     - libiptc
     - iso-codes
-    - libnl-3.0
+    - libnl-3.0 >= 3.2.25
     - systemd
     - libsoup-2.4
 Configure: configure
