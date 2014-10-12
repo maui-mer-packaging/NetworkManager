@@ -26,6 +26,10 @@ Requires:   wpa_supplicant
 Requires:   ppp
 Requires:   udev
 Requires:   mobile-broadband-provider-info
+Requires:   systemd
+Requires(preun): systemd
+Requires(post): systemd
+Requires(postun): systemd
 BuildRequires:  pkgconfig(gtk-doc)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(dbus-glib-1)
@@ -37,7 +41,7 @@ BuildRequires:  pkgconfig(uuid)
 BuildRequires:  pkgconfig(gudev-1.0)
 BuildRequires:  pkgconfig(libiptc)
 BuildRequires:  pkgconfig(iso-codes)
-BuildRequires:  pkgconfig(libnl-3.0)
+BuildRequires:  pkgconfig(libnl-3.0) >= 3.2.25
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(libsoup-2.4)
 BuildRequires:  glib2
@@ -132,8 +136,8 @@ export CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"
     --enable-concheck \
     --with-session-tracking=systemd \
     --with-suspend-resume=systemd \
-    --with-systemdsystemunitdir=%{_unitdir} \
-    --with-udev-dir=%{_prefix}/lib/udev \
+    --with-systemdsystemunitdir=/%{_lib}/systemd/system \
+    --with-udev-dir=/lib/udev \
     --with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
     --with-dist-version=%{version}-%{release}
 
@@ -167,6 +171,24 @@ rm -rvf %{buildroot}/usr/share/man
 # << install post
 
 %find_lang %{name}
+
+%preun
+if [ "$1" -eq 0 ]; then
+systemctl stop dbus-org.freedesktop.NetworkManager.service
+systemctl stop NetworkManager-dispatcher.service
+systemctl stop NetworkManager-wait-online.service
+systemctl stop NetworkManager.service
+fi
+
+%post
+systemctl daemon-reload
+systemctl reload-or-try-restart dbus-org.freedesktop.NetworkManager.service
+systemctl reload-or-try-restart NetworkManager-dispatcher.service
+systemctl reload-or-try-restart NetworkManager-wait-online.service
+systemctl reload-or-try-restart NetworkManager.service
+
+%postun
+systemctl daemon-reload
 
 %post glib -p /sbin/ldconfig
 
